@@ -8,15 +8,14 @@ MAINTAINER GemfireGSS <xxxxxxxxx@gmail.com>
 
 ###################
 # for example: 
-# jdk-8u172-linux-x64.tar.gz download URL
-# http://download.oracle.com/otn-pub/java/jdk/8u172-b11/a58eab1ec242421181065cdc37240b08/jdk-8u172-linux-x64.tar.gz
+# http://download.oracle.com/otn-pub/java/jdk/8u181-b13/96a7b8442fe848ef90c96a2fad6ed6d1/jdk-8u181-linux-x64.tar.gz
 # --》
 # "http://download.oracle.com/otn-pub/java/jdk/$JAVA_VERSION-$BUILD_VERSION/$JDK_HASH_VALUE/jdk-$JAVA_VERSION-linux-x64.tar.gz"
 ###################
-ENV JAVA_VERSION 8u172
-ENV BUILD_VERSION b11
-ENV JAVA_SUB_VERSION 172
-ENV JDK_HASH_VALUE a58eab1ec242421181065cdc37240b08
+ENV JAVA_VERSION 8u181
+ENV BUILD_VERSION b13
+ENV JAVA_SUB_VERSION 181
+ENV JDK_HASH_VALUE 96a7b8442fe848ef90c96a2fad6ed6d1
 
 ##################
 # Gemfire version
