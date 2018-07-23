@@ -78,7 +78,7 @@ Run the below command to run the container instance(you need to modify the volum
 docker run -it nativeclient92:0.1 bash
 ```
 
-# Start a locator and a cacheserver from container. Create a partition region: exampleRegion.
+# Start a locator and a cacheserver from container. 
 ```
 root@3facc296b49f:/opt/pivotal# gfsh
     _________________________     __
@@ -122,7 +122,10 @@ gfsh>list members
 ---------------- | ----------------------------------------------------
 walk-lively-dust | 172.17.0.2(walk-lively-dust:73:locator)<ec><v0>:1024
 escape-wrong-pet | 172.17.0.2(escape-wrong-pet:199)<v1>:1025
+```
+# Create a partition region: exampleRegion.
 
+```
 gfsh>create region --name=exampleRegion --type=PARTITION
      Member      | Status
 ---------------- | -----------------------------------------------------
@@ -131,7 +134,8 @@ escape-wrong-pet | Region "/exampleRegion" created on "escape-wrong-pet"
 gfsh>exit
 ```
 
-# Switch to NCWork folder which has the compiled quickstart samples. Run the BasicOperations sample and do some operations to exampleRegion.
+# Switch to NCWork folder which has the compiled quickstart samples. 
+# Run the BasicOperations sample for verification.
 
 ```
 root@3facc296b49f:/opt/pivotal# cd /opt/pivotal/NCWork
@@ -255,4 +259,110 @@ diskstore | totalDiskUsage        | 0
           | totalBackupInProgress | 0
 query     | activeCQCount         | 0
           | queryRequestRate      | 0
+```
+
+# An example to run compile your own native client application.
+Step1:
+Copy your own native client code into docker container.
+For example:
+```
+docker cp HelloWorld.cpp angry_knuth:/opt/pivotal/NCWork/HelloWorld.cpp
+```
+
+Step2:
+Compile this c++ application.
+For example:
+```
+g++ \
+-D_REENTRANT \
+-O3 \
+-Wall \
+-m64 \
+-I$GEODE/include \
+HelloWorld.cpp \
+-o HelloWorld \
+-L$GEODE/lib \
+-Wl,-rpath,$GEODE/lib \
+-lpivotal-gemfire \
+-std=c++11 \
+-lstdc++ \
+-lgcc_s \
+-lc
+```
+
+Step3:
+Run the compiled binary.
+For example:
+```
+root@1092eaffe09e:/opt/pivotal/NCWork# ./HelloWorld 
+[config 2018/07/23 05:21:05.599754 UTC 1092eaffe09e:432 139822001862528] Using Geode Native Client Product Directory: /opt/pivotal/pivotal-gemfire-native
+[config 2018/07/23 05:21:05.600051 UTC 1092eaffe09e:432 139822001862528] Product version: Pivotal Gemfire Native 9.2.0-build.10 (64bit) Wed, 24 Jan 2018 10:53:51 -0800
+[config 2018/07/23 05:21:05.600063 UTC 1092eaffe09e:432 139822001862528] Source revision: c6fee485fd81691d4e2991a6d857cb9c5cd823e6
+[config 2018/07/23 05:21:05.600070 UTC 1092eaffe09e:432 139822001862528] Source repository: 
+[config 2018/07/23 05:21:05.600077 UTC 1092eaffe09e:432 139822001862528] Running on: SystemName=Linux Machine=x86_64 Host=1092eaffe09e Release=4.9.87-linuxkit-aufs Version=#1 SMP Fri Mar 16 18:16:33 UTC 2018
+[config 2018/07/23 05:21:05.600086 UTC 1092eaffe09e:432 139822001862528] Current directory: /opt/pivotal/NCWork
+[config 2018/07/23 05:21:05.600102 UTC 1092eaffe09e:432 139822001862528] Current value of PATH: /usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/opt/pivotal/current_java:/opt/pivotal/current_java/bin:/opt/pivotal/pivotal-gemfire-9.2.0/bin:/opt/pivotal/pivotal-gemfire-native/bin
+[config 2018/07/23 05:21:05.600110 UTC 1092eaffe09e:432 139822001862528] Current library path: :/opt/pivotal/pivotal-gemfire-native/lib
+[config 2018/07/23 05:21:05.600131 UTC 1092eaffe09e:432 139822001862528] Geode Native Client System Properties:
+  appdomain-enabled = false
+  archive-disk-space-limit = 0
+  archive-file-size-limit = 0
+  auto-ready-for-events = true
+  bucket-wait-timeout = 0
+  cache-xml-file = 
+  conflate-events = server
+  connect-timeout = 59
+  connection-pool-size = 5
+  connect-wait-timeout = 0
+  crash-dump-enabled = true
+  disable-chunk-handler-thread = false
+  disable-shuffling-of-endpoints = false
+  durable-client-id = 
+  durable-timeout = 300
+  enable-time-statistics = false
+  grid-client = false
+  heap-lru-delta = 10
+  heap-lru-limit = 0
+  log-disk-space-limit = 0
+  log-file = 
+  log-file-size-limit = 0
+  log-level = config
+  max-fe-threads = 4
+  max-socket-buffer-size = 66560
+  notify-ack-interval = 1
+  notify-dupcheck-life = 300
+  on-client-disconnect-clear-pdxType-Ids = false
+  ping-interval = 10
+  read-timeout-unit-in-millis = false
+  redundancy-monitor-interval = 10
+  security-client-auth-factory = 
+  security-client-auth-library = 
+  security-client-dhalgo = 
+  security-client-kspath = 
+  ssl-enabled = false
+  ssl-keystore = 
+  ssl-truststore = 
+  stacktrace-enabled = false
+  statistic-archive-file = statArchive.gfs
+  statistic-sampling-enabled = true
+  statistic-sample-rate = 1
+  suspended-tx-timeout = 30
+  tombstone-timeout = 480000
+[config 2018/07/23 05:21:05.651593 UTC 1092eaffe09e:432 139822001862528] Starting the Geode Native Client
+[info 2018/07/23 05:21:05.651814 UTC 1092eaffe09e:432 139822001862528] Using GFNative_jHkb8OpHcQ432 as random data for ClientProxyMembershipID
+[info 2018/07/23 05:21:05.652737 UTC 1092eaffe09e:432 139822001862528] Hello World
+[info 2018/07/23 05:21:05.652831 UTC 1092eaffe09e:432 139822001862528] Created the RegionFactory
+[info 2018/07/23 05:21:05.657396 UTC 1092eaffe09e:432 139822001862528] Set default pool with localhost:40404
+[info 2018/07/23 05:21:05.657460 UTC 1092eaffe09e:432 139822001862528] Creating region exampleRegion attached to pool default_geodeClientPool
+[info 2018/07/23 05:21:05.658385 UTC 1092eaffe09e:432 139822001862528] Created the Region Programmatically.
+[info 2018/07/23 05:21:05.658755 UTC 1092eaffe09e:432 139822001862528] Using socket send buffer size of 64240.
+[info 2018/07/23 05:21:05.658789 UTC 1092eaffe09e:432 139822001862528] Using socket receive buffer size of 64240.
+[info 2018/07/23 05:21:05.658953 UTC 1092eaffe09e:432 139821578184448] ClientMetadataService started for pool default_geodeClientPool
+[info 2018/07/23 05:21:06.689164 UTC 1092eaffe09e:432 139822001862528] Putting Entries into the Region completed
+[info 2018/07/23 05:21:06.689207 UTC 1092eaffe09e:432 139822001862528] Put the second Entry into the Region
+[info 2018/07/23 05:21:06.691431 UTC 1092eaffe09e:432 139822001862528] Obtained the first Entry from the Region
+[info 2018/07/23 05:21:06.691466 UTC 1092eaffe09e:432 139822001862528] Obtained the second Entry from the Region
+[info 2018/07/23 05:21:06.698558 UTC 1092eaffe09e:432 139821578184448] ClientMetadataService stopped for pool default_geodeClientPool
+[config 2018/07/23 05:21:06.807061 UTC 1092eaffe09e:432 139822001862528] Stopped the Geode Native Client
+[info 2018/07/23 05:21:06.807162 UTC 1092eaffe09e:432 139822001862528] Closed the Geode Cache
 ```
